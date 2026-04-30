@@ -1,20 +1,20 @@
 # LTI - Talent Tracking System  | EN
 
-This project is a full-stack application with a React frontend and an Express backend using Prisma as an ORM. The frontend is initiated with Create React App, and the backend is written in TypeScript.
+This project is a full-stack application with a React frontend and an Express backend using Firebase Admin SDK (Firestore) as the database. The frontend is initiated with Create React App, and the backend is written in TypeScript.
 
 ## Directory and File Explanation
 
 - `backend/`: Contains the server-side code written in Node.js.
   - `src/`: Contains the source code for the backend.
-    - `index.ts`:  The entry point for the backend server.
-  - `prisma/`: Contains the Prisma schema file for ORM.
+    - `index.ts`: The entry point for the backend server.
   - `tsconfig.json`: TypeScript configuration file.
-  - `.env`: Contains the environment variables.
+  - `.env`: Contains Firebase service-account environment variables.
+  - `.env.example`: Template with documented placeholder values.
 - `frontend/`: Contains the client-side code written in React.
   - `src/`: Contains the source code for the frontend.
   - `public/`: Contains static files such as the HTML file and images.
   - `build/`: Contains the production-ready build of the frontend.
-- `docker-compose.yml`: Contains the Docker Compose configuration to manage your application's services.
+- `prompts/`: Contains AI session prompts used during development.
 - `README.md`: This file contains information about the project and instructions on how to run it.
 
 ## Project Structure
@@ -27,16 +27,19 @@ The frontend is a React application, and its main files are located in the `src`
 
 ### Backend
 
-El backend es una aplicación Express escrita en TypeScript.
-- The `src` directory contains the source code
-- The `prisma` directory contains the Prisma schema.
+The backend is an Express application written in TypeScript using Firebase Admin SDK to interact with Firestore.
+- The `src` directory contains the source code.
+- Firebase credentials are configured via environment variables in `.env`.
 
 ## First steps
 
 To get started with this project, follow these steps:
 
 1. Clone the repo
-2. install the dependencias for frontend and backend
+2. Set up Firebase credentials:
+   - Go to Firebase Console → Project Settings → Service Accounts → Generate new private key
+   - Copy `backend/.env.example` to `backend/.env` and fill in your credentials
+3. Install dependencies for frontend and backend:
 ```sh
 cd frontend
 npm install
@@ -44,23 +47,22 @@ npm install
 cd ../backend
 npm install
 ```
-3. Build the backend server
+4. Build the backend server:
 ```
 cd backend
 npm run build
-````
-4. Run the backend server
+```
+5. Run the backend server:
 ```
 cd backend
-npm run dev 
+npm run dev
 ```
-
-5. In a new terminal window, build the frontend server:
+6. In a new terminal window, build the frontend server:
 ```
 cd frontend
 npm run build
 ```
-6. Start the frontend server
+7. Start the frontend server:
 ```
 cd frontend
 npm start
@@ -68,49 +70,41 @@ npm start
 
 The backend server will be running at http://localhost:3010, and the frontend will be available at http://localhost:3000.
 
-## Docker y PostgreSQL
+## API Endpoints
 
-This project uses Docker to run a PostgreSQL database. Here's how to get it up and running:
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/` | Health check — returns `Hola LTI!` |
+| POST | `/users` | Create a user document in Firestore |
+| GET | `/users` | List all user documents from Firestore |
 
-Install Docker on your machine if you haven't done so already. You can download it here.
-Navigate to the root directory of the project in your terminal.
-Run the following command to start the Docker container:
-```
-docker-compose up -d
-```
-This will start a PostgreSQL database in a Docker container. The -d flag runs the container in detached mode, meaning it runs in the background.
+## Environment Variables
 
-To access the PostgreSQL database, you can use any PostgreSQL client with the following connection details:
- - Host: localhost
- - Port: 5432
- - User: postgres
- - Password: password
- - Database: mydatabase
+See `backend/.env.example` for all required variables. These map to your Firebase service account credentials:
 
-Please replace User, Password, and Database with the actual user, password, and database name specified in your .env file.
-
-To stop the Docker container, run the following command:
-```
-docker-compose down
-```
+- `FIREBASE_PROJECT_ID`
+- `FIREBASE_PRIVATE_KEY_ID`
+- `FIREBASE_PRIVATE_KEY`
+- `FIREBASE_CLIENT_EMAIL`
+- `FIREBASE_CLIENT_ID`
 
 # LTI - Sistema de Seguimiento de Talento  | ES
 
-Este proyecto es una aplicación full-stack con un frontend en React y un backend en Express usando Prisma como ORM. El frontend se inicia con Create React App y el backend está escrito en TypeScript.
+Este proyecto es una aplicación full-stack con un frontend en React y un backend en Express usando Firebase Admin SDK (Firestore) como base de datos. El frontend se inicia con Create React App y el backend está escrito en TypeScript.
 
 ## Explicación de Directorios y Archivos
 
 - `backend/`: Contiene el código del lado del servidor escrito en Node.js.
   - `src/`: Contiene el código fuente para el backend.
     - `index.ts`: El punto de entrada para el servidor backend.
-  - `prisma/`: Contiene el archivo de esquema de Prisma para ORM.
   - `tsconfig.json`: Archivo de configuración de TypeScript.
-  - `.env`: Contiene las variables de entorno.
+  - `.env`: Contiene las variables de entorno de la cuenta de servicio de Firebase.
+  - `.env.example`: Plantilla con valores de ejemplo documentados.
 - `frontend/`: Contiene el código del lado del cliente escrito en React.
   - `src/`: Contiene el código fuente para el frontend.
   - `public/`: Contiene archivos estáticos como el archivo HTML e imágenes.
   - `build/`: Contiene la construcción lista para producción del frontend.
-- `docker-compose.yml`: Contiene la configuración de Docker Compose para gestionar los servicios de tu aplicación.
+- `prompts/`: Contiene los prompts de IA utilizados durante el desarrollo.
 - `README.md`: Este archivo contiene información sobre el proyecto e instrucciones sobre cómo ejecutarlo.
 
 ## Estructura del Proyecto
@@ -123,16 +117,19 @@ El frontend es una aplicación React y sus archivos principales están ubicados 
 
 ### Backend
 
-El backend es una aplicación Express escrita en TypeScript.
-- El directorio `src` contiene el código fuente
-- El directorio `prisma` contiene el esquema de Prisma.
+El backend es una aplicación Express escrita en TypeScript que usa Firebase Admin SDK para interactuar con Firestore.
+- El directorio `src` contiene el código fuente.
+- Las credenciales de Firebase se configuran mediante variables de entorno en `.env`.
 
 ## Primeros Pasos
 
 Para comenzar con este proyecto, sigue estos pasos:
 
 1. Clona el repositorio.
-2. Instala las dependencias para el frontend y el backend:
+2. Configura las credenciales de Firebase:
+   - Ve a Firebase Console → Configuración del proyecto → Cuentas de servicio → Generar nueva clave privada
+   - Copia `backend/.env.example` a `backend/.env` y completa tus credenciales
+3. Instala las dependencias para el frontend y el backend:
 ```sh
 cd frontend
 npm install
@@ -140,23 +137,22 @@ npm install
 cd ../backend
 npm install
 ```
-3. Construye el servidor backend:
+4. Construye el servidor backend:
 ```
 cd backend
 npm run build
-````
-4. Inicia el servidor backend:
+```
+5. Inicia el servidor backend:
 ```
 cd backend
-npm run dev 
+npm run dev
 ```
-
-5. En una nueva ventana de terminal, construye el servidor frontend:
+6. En una nueva ventana de terminal, construye el servidor frontend:
 ```
 cd frontend
 npm run build
 ```
-6. Inicia el servidor frontend:
+7. Inicia el servidor frontend:
 ```
 cd frontend
 npm start
@@ -164,28 +160,20 @@ npm start
 
 El servidor backend estará corriendo en http://localhost:3010 y el frontend estará disponible en http://localhost:3000.
 
-## Docker y PostgreSQL
+## Endpoints de la API
 
-Este proyecto usa Docker para ejecutar una base de datos PostgreSQL. Así es cómo ponerlo en marcha:
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/` | Health check — devuelve `Hola LTI!` |
+| POST | `/users` | Crea un documento de usuario en Firestore |
+| GET | `/users` | Lista todos los documentos de usuario de Firestore |
 
-Instala Docker en tu máquina si aún no lo has hecho. Puedes descargarlo desde aquí.
-Navega al directorio raíz del proyecto en tu terminal.
-Ejecuta el siguiente comando para iniciar el contenedor Docker:
-```
-docker-compose up -d
-```
-Esto iniciará una base de datos PostgreSQL en un contenedor Docker. La bandera -d corre el contenedor en modo separado, lo que significa que se ejecuta en segundo plano.
+## Variables de Entorno
 
-Para acceder a la base de datos PostgreSQL, puedes usar cualquier cliente PostgreSQL con los siguientes detalles de conexión:
- - Host: localhost
- - Port: 5432
- - User: postgres
- - Password: password
- - Database: mydatabase
+Ver `backend/.env.example` para todas las variables requeridas. Corresponden a las credenciales de tu cuenta de servicio de Firebase:
 
-Por favor, reemplaza User, Password y Database con el usuario, la contraseña y el nombre de la base de datos reales especificados en tu archivo .env.
-
-Para detener el contenedor Docker, ejecuta el siguiente comando:
-```
-docker-compose down
-```
+- `FIREBASE_PROJECT_ID`
+- `FIREBASE_PRIVATE_KEY_ID`
+- `FIREBASE_PRIVATE_KEY`
+- `FIREBASE_CLIENT_EMAIL`
+- `FIREBASE_CLIENT_ID`
